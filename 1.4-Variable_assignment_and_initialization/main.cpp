@@ -82,5 +82,38 @@ VALUE-INITIALIZATION AND ZERO-INITIALIZATION
 ------------------------------------------
 LIST-INITIALIZATION IS THE PREFERRED FORM OF INITIALIZATION IN MODERN C++
 + List-initialization (including value-initialization) is generally preferred over the other initialization forms because it works in most cases (and is therefore most consistent), it disallows narrowing conversions (which we normally don't want), and it supports initialization with a list of values (something we'll cover in a future lesson).
-+ 
++ Prefer direct-list-initialization or value-initialization to initialize your variables.
++ Use direct-list-initialization when you're actually using thi initial value:
+    int x {0}; // direct-list-initialization with initial value 0
+    std::cout << x; // we're using that 0 value here
++ use value-initialization when the object's value is temporary and will be replaced:
+    int x {}; // value initialization
+    std::cin >> x; // we're immediately replacing that value so an explicit 0 would be meaningless
+------------------------------------------
+INITIALIZE YOUR VARIABLES
++ Initialize your variables upon creation. You may eventually find cases where you want to ignore this advice for a specific reason (e.g. a performance critical section of code that uses a lot of variables), and that's okay, as long as the choice is made deliberately.
++ Best practice: Initialize your variables upon creation.
+------------------------------------------
+INSTANTIATION
++ The term instantiation is a fancy word that means a variable has been created (allocated) and initialized (this includes default initialization). An instantiated object is sometimes called an instance. Most often, this term is applied to class type objects, but it is occasionally applied to objects of other types as well.
+------------------------------------------
+INITIALIZING MULTIPLE VARIABLES
++ You can initialize multiple variables defined on the same line:
+    int a = 5, b = 6;  // copy-initialization         
+    int c(7), d(8);    // direct-initialization 
+    int e{9}, f{10};   // direct-list-initialization     
+    int i{}, j{};      // value-initialization 
+------------------------------------------
+UNUSED INITIALIZED VARIABLES WARNINGS
++ Modern compilers will typically generate warnings if a variable is initialized but not used (since this is rarely desirable). And if "treat warnings as errors" is enabled, these warnings will be promoted to errors and cause the compilation to fail.
+------------------------------------------
+QUIZ TIME
++ Question 1: What is the difference between initialization and assignment?
+    → Initialization gives a variable an initial value at the point when it's created. ASsignment gives avariable a value at some point after the variable is created.
++ Question 2: What form of initialization should you prefer when you want to initialize a variable with a specific value?
+    → Direct-list-initialization (aka. direct brace initialization).
++ Question 3: What are default-initialization and value-initialization? What is the behavior of each? Which should you prefer?
+    → Default-initialization is when a variable initialization has no initializer ('int x;'). In most cases, the variable is left with an indeterminate value.
+    → Value-initialization is when a variable initialization has an empty brace initializer ('int x{};'). In most cases, this will perform zero-initialization.
+    → You should prefer value-initialization, as it initializes the variable to a consistent value.
 */
