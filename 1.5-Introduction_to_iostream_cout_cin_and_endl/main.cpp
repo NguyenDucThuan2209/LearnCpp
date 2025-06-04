@@ -48,6 +48,130 @@ std::endl VS \n
         std::cout << '/n'; // will often print as 12142, which probably isn't what you were expecting.
 ------------------------------------------
 std::cin
-+ 
++ std::cin is another predefined variable in the iostream library. Whereas std::cout prints data to the console (using the insertion operator << to provide the data), std::cin (which stands for "character input") reads input from keyboard. We typically use the extraction operator >> to put the input data in a variable (which can then be used in subsequent statements).
++ Just like it is possible to output more than one bit of text in a single line, it is also possible to input more than one value on a single line. Values entered should be separated by whitespace (spaces, tabs, or newlines).
++ The C++ I/O library does not provide a way to accept keyboard input without the user having to press enter. If that is something you desire, you'll have to use a third party library. For console applications, we'd recommend pdcurses, FXTUI, cpp-terminal, or notcurses. Many graphical user interface libraries have their own functions to do this kind of thing.
+------------------------------------------
+std::cin IS BUFFERED
++ In a prior section, we noted that outputting data is actually a two stage process:
+    1. The data from each output request is added (to the end) of an output buffer.
+    2. Later, the data from (the front of) the output buffer is flushed to the output device (the console).
++ Adding data to the end of a buffer and removing it from the front of a buffer ensures data is processed in the same order in which it was added. This is sometimes called FIFO (first in, first out).
++ Similarly, inputting data is also a two stage process:
+    1. The individual characters you enter as input are added to the end of an input buffer (inside std::cin). The enter key (pressed to submit the data) is also stored as a '\n' character.
+    2. The extraction operator >> removes character from the front of the input buffer and converts them into a value that is assigned (via copy-assignment) to the associated variable. This variable can then be used in subsequent statements.
++ Each line of input data in the input buffer is terminated by a '\n' character
++ We'll demonstrate this using the following program:
 
+int main()
+{
+    std::cout << "Enter 2 numbers: ";
+
+    int x{};
+    std::cin >> x;
+
+    int y{};
+    std::cin >> y;
+
+    std::cout << "You entered: " << x << " and " << y << '\n';
+    
+    return 0;
+}
++ This program inputs to 2 variables (this time as separate statements). We'll run this program twice.
+    Run #1: 
+        When std::cin >> x; is encountered, the program will wait for input. Enter the value 4. The input 4\n goes into the input buffer, and the value 4 is extracted to variable x.
+        When std::cin >> y; is encountered, the program will again wait for input. Enter the value 5. The input 5\n goes into the input buffer, and the value 5 is extracted to variable y. Finally, the program will print "You entered: 4 and 5".
+    -> There should be nothing surprising about this run.
+
+    Run #2:
+        When std::cin >> x; is encountered, the program will wait for input. Enter "4 5". The input "4 5\n" goes into the input buffer, but only the 4 is extracted to variable x (extraction stops at the space).
+        When std::cin >> y; is encountered, the program will NOT wait for input. Instead, the 5 that still in the input buffer is extracted to variable y. The program then prints "You entered: 4 and 5".
+    → The program didn't wait for the user to enter additional input when extracting to variable y because there was already prior input in the input buffer that could be used.
+
++ std::cin is buffered because it allows us to separate the entering of input from the extract of input. We can enter input once and then perform multiple extraction requests on it.
+------------------------------------------
+THE BASIC EXTRACTION PROCESS
++ Here's a simplified view of how operator >> works for input:
+    1. If std::cin is not in a good state (e.g. the prior extraction failed and std::cin has not yet been cleared), no extraction is attempted, and the extraction process aborts immediately.
+    2. Leading whitespace characters (spaces, tabs, and newlines at the front of the buffer) are discarded from the input buffer. This will discard an unextracted newline character remaining from a prior line of input.
+    3. If the input buffer is now empty, operator >> will wait for the user to enter more data. Any leading whitespace is discarded from the entered data.
+    4. Operator >> then extracts as many consecutive characters as it can, until it encounters either a newline character (representing the end of the line of input) or a character that is not valid for the variable being extracted to. 
++ The result of the extraction process is as follows:
+    If the extraction aborted in step 1, then no extraction attempt occurred. Nothing else happens.
+    If any characters were extracted in step 4 above, extraction is a success. The extracted characters are converted into a value that is then copy-assigned to the variable.
+    If no characters could be extracted in step above, extraction has failed. The object being extracted to is copy-assigned the value 0 (as of C++11), and any future extractions will immediately fail (until std::cin is cleared).
++ Any non-extracted characters (including newlines) remain available for the next extraction attempt. 
++ Here is an example for the following snippet:
+    int x{};
+    std::cin >> x;
+→ This is what happens in a three different input cases:
+    If the user types 5a and enter, 5a\n will be added to the buffer. 5 will be extracted, converted to an integer, and assigned to variable x. a\n will be left in the input buffer for the next extraction.
+    If the user type 'b' and enter, b\n would be added to the buffer. Because b is not a valid integer, no characters can be extracted, so this is an extraction failure. Variable x would be set to 0, and future extractions will fail until the input stream is cleared.
+    If std::cin is not in a good state due to a prior failed extraction, nothing happens here. The value of variable x is not altered.
+------------------------------------------
+OPERATOR << vs OPERATOR >>
++ New programmers often mix up std::cin, std::cout, the insertion operator << and the extraction operator >>. Here's an easy way to remember:
+    std::cin and std::cout always go on the left-hand side of the operator
+    std::cout is used to output a value (cout == character output)
+    std::cin is used to get an input value (cin == character input)
+    << is used with std::cout, and shows the direction that data is moving. Ex: std::cout << 4 moves the value 4 to the console.
+    >> is used with std::cin, and shows the direction that data is moving. Ex: std::cin >> x moves the value the user entered from the keyboard into variable x.
+------------------------------------------
+QUIZ TIME
++ Question 1: Consider the following program that we used above:
+
+#include <iostream>
+
+int main()
+{
+    std::cout << "Enter a number: ";
+    int x{};
+    std::cin >> x;
+    std::cout << "You entered " << x << '\n';
+
+    return 0;
+}
+→ The program expects you to enter an integer value, as the variable x that the user input will be put into is an integer variable.
+→ Run this program multiple times and describe the output that results when you enter the following types of input:
+    a. A letter such as h.
+    → Result: 0 is always printed. An integer can't hold a letter, so extraction completely fails. x is assigned the value 0
+    
+    b. A number with a factional part (e.g. 3.2). Try numbers with factional parts less than 0.5 and greater than 0.5
+    → Result: The fractional part is dropped (not rounded). Given the number 3.2, the 3 gets extracted, but . is an invalid character, so extraction stops here. The .2 remains for a future extraction attempt.
+
+    c. A small negative integer, such as -3.
+    → Result: The entered number is output. A minus sign at the beginning of a number is acceptable, so it is extracted. The remaining numbers are extracted as well.
+
+    d. A really big number (at lease 3 billion)
+    → Result: You are most likely to get the number 2,147,483,647 (without the comma ,). x can only hold numbers up to a certain size. If you enter a value larger than the largest number x can hold, it will be set to the largest number that x can hold (which probably 2,147,483,647 but might be different on your system).
+
+    e. A small number followed by some letters, such as 123abc.
+    → Result: The numeric values are printed (e.g. 123). 123 is extracted, the remaining characters (e.g. abc) are left for a later extraction.
+
+    f. A few letters followed by a small number, such as abc123
+    → Result: 0 is always printed. An integer can't hold a letter, so extraction completely fails. x is assigned the value 
+
+    g. +5 (three spaces, followed by a plus symbol, and a 5)
+    → Result: 5 is printed. The leading whitespace is skipped. Plus is a valid symbol at the start of a number (just as a minus sign would be), so it is extracted. The 5 is also extracted.
+
+    h. 5b6
+    → Result: 5 is printed. 5 is extracted. b is invalid, so extraction stops here. The b6 remains for a future extraction attempt.
++ Question 2: Ask the user to enter three values. The program should then print these value. Add an appropriate comment above function main(). The program should match the following output (when run with input values 4, 5, and 6):
+Enter three numbers: 4 5 6
+You entered 4, 5, and 6.
+    → Answer:
+#include <iostream>
+
+// Ask the user to enter three values and then print those values as a sentence.
+int main()
+{
+    std::cout << "Enter three numbers: ";
+
+    int first{}, second{}, third{};
+    std::cin >> first >> second >> third;
+
+    std::cout << "You entered " << first << ", " << second << ", and " << third << ".\n";
+
+    return 0;
+}
 */
