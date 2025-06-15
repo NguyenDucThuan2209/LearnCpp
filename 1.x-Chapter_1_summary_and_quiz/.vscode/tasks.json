@@ -1,0 +1,24 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Chapter 1 summary and quiz",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "main.cpp",
+                "-o",
+                "main.out"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compile C++ program using g++."
+        }
+    ],
+    "version": "2.0.0"
+}
