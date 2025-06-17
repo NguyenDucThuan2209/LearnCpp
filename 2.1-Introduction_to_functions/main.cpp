@@ -17,12 +17,41 @@ AN EXAMPLE OF A USER-DEFINED FUNCTION
     → Just like variables have names, so do user-defined functions. The functionName is the identifier of your user-defined function.
     → The parentheses after the identifier tell the compiler that we're defining a function.
 + The curly braces and statements in-between are called the function body. This is where the statements that determine what your function does will go.
-+ To call a function, we use the function's name followed by a set of parentheses (e.g. functionName() calls the function whose name is functionName). Conventionally, the parenthesis are placed adjacent to the function name (with no whitespace between them).
++ To call a function, we use the function's name followed by a set of parentheses (e.g. functionName() calls the function whose name is functionName). Conventionally, the       parenthesis are placed adjacent to the function name (with no whitespace between them).
 + When calling a function, don't forget the parentheses () after the function's name. If you forget the parentheses, your program may not compile (and if it does, the function will not be called).
 ------------------------------------------
 CALLING FUNCTIONS MORE THAN ONCE
 + One useful thing about functions is that they can be called more than once.
 ------------------------------------------
 FUNCTIONS CAN CALL FUNCTIONS THAT CALL OTHER FUNCTIONS
+------------------------------------------
+NESTED FUNCTIONS ARE NOT SUPPORTED
++ A function whose definition is placed inside another function is a nested function. Unlike some other programming languages, in C++, functions cannot be nested.
+------------------------------------------
+QUIZ TIME
++ Question 1: In a function definition, what are the curly braces and statements in-between called?
+    → The function body
++ Question 2: What does the following program print?
+    void doB()
+    {
+        std::cout << "In doB()\n";
+    }
+    void doA()
+    {
+        std::cout << "In doA()\n";
+        doB();
+    }
+    int main()
+    {
+        std::cout << "Starting main()\n";
 
+        doA();
+        doB();
+
+        std::cout << "Ending main()\n";
+
+        return 0;
+    }
+
+    → Starting main()\nIn doA()\nIn doB()\nIn doB()\nEnding main()\n
 */
