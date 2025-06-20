@@ -27,4 +27,30 @@ CONCLUSION
 + Function parameters and return values are the key mechanisms by which functions can be written in a reusable way, as it allows us to write functions that can perform tasks and return retrieved or calculated results back to the caller without knowing what the specific inputs or outputs are ahead of time.
 ------------------------------------------
 QUIZ TIME
++ Question 1: Write a function called doubleNumber() that takes one integer parameter. The function should return double the value of the parameter.
+    int doubleNumber(int value)
+    {
+        return value * 2;
+    }
++ Question 2: Write a complete program that reads an integer from the user, doubles it using the doubleNumber function you wrote in the previous question, and then prints the doubled value out to the console.
 */
+
+#include <iostream>
+
+int doubleNumber(int value)
+{
+    return value * 2;
+}
+
+int main()
+{
+    std::cout << "Enter your number: ";
+
+    int num{};
+    std::cin >> num;
+    std::cout << '\n';
+
+    std::cout << "Doubled value of your number: " << doubleNumber(num) << '\n';
+
+    return 0;
+}

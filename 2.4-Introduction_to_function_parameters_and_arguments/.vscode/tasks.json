@@ -1,0 +1,24 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Chapter 2.4: Introduction to function parameters and arguments",
+            "detail": "Compile main.cpp program for the lesson 2.4",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g", 
+                "main.cpp",
+                "-o",
+                "main.out"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}
