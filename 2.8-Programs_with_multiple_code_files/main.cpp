@@ -76,6 +76,6 @@ int main()
     int first{getInputWithNote("Enter first number: ")};
     int second{getInputWithNote("Enter second number: ")};
 
-    std::cout << "The sum of " << first << " and " << second << " is: " << add(first, second);
+    std::cout << "The sum of " << first << " and " << second << " is: " << add(first, second) << "\n";
     return 0;
 }

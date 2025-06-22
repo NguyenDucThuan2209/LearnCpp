@@ -7,7 +7,6 @@ int getInputWithNote(std::string content)
 
     std::cout << content;
     std::cin >> input;
-    std::cout << "\n";
 
     return input;
 }

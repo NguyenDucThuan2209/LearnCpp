@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/main.out.dir/main.cpp.o -c /home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/main.cpp",
+  "file": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/main.cpp",
+  "output": "CMakeFiles/main.out.dir/main.cpp.o"
+},
+{
+  "directory": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/main.out.dir/add.cpp.o -c /home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/add.cpp",
+  "file": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/add.cpp",
+  "output": "CMakeFiles/main.out.dir/add.cpp.o"
+},
+{
+  "directory": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/main.out.dir/getInputWithNote.cpp.o -c /home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/getInputWithNote.cpp",
+  "file": "/home/timmy/cpp-projects/LearnCpp/2.8-Programs_with_multiple_code_files/getInputWithNote.cpp",
+  "output": "CMakeFiles/main.out.dir/getInputWithNote.cpp.o"
+}
+]
