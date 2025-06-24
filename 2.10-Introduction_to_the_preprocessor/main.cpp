@@ -69,4 +69,46 @@ OBJECT-LIKE MACROS WITHOUT SUBSTITUTION TEXT
 CONDITIONAL COMPILATION
 + The conditional compilation preprocessor directives allow you to specify under what conditions something will or won't compile. There are quire a few different conditional compilation directives, but we'll only cover a few that are used the most often: #fdef, #ifndef, and #endif.
 + The #ifdef preprocessor directive allows the preprocessor to check whether an identifier has been previously defined via #define. If so, the code between the #ifdef and matching #endif is compiled. If not the code is ignored.
++ Consider the following program:
+#include <iostream>
+
+#define PRINT_TIMMY
+
+int main()
+{
+#ifdef PRINT_TIMMY
+    // Will be compiled since PRINT_TIMMY is defined
+    std::cout << "Timmy\n";
+#endif
+
+#ifdef PRINT_TONY
+    // Will be excluded since PRINT_TONY is not defined
+    std::cout << "Tony\n"; 
+#endif
+
+    return 0;
+}
++ #ifndef is the opposite of #ifdef, in that it allows you to check whether an identifier has NOT been #define yet.
+------------------------------------------
+#if 0
++ One more common use of conditional compilation involves using #if 0 to exclude a block of code from being compiled (as if it were inside a comment block)
++ This provides a convenient way to "comment out" code that contains multi-line comments (which can't be commented out using another multi-line comment due to multi-line comments being non-nestable).
+------------------------------------------
+MACRO SUBSTITUTION WITHIN OTHER PREPROCESSOR COMMANDS
++ Since we defined PRINT_TIMMY to be nothing, how come the preprocessor didn't replace PRINT_TIMMY in #ifdef PRINT_TIMMY with nothing and exclude the output statement from compilation?
++ In most cases, macro substitution does not occur when a macro identifier is used within another preprocessor command.
++ There is at least one exception to this rule: most forms of #if and #elif do macro substitution within the preprocessor command.
+#define FOO 9 // Here is the macro substitution
+
+// This FOO does not get replaced with 9 because it's part of another preprocessor directive
+ifdef FOO 
+    // This FOO gets replaced with 9 because it's part of the normal code
+    std::cout << FOO << "\n";
+#endif
+------------------------------------------
+THE SCOPE OF #DEFINE
++ Directives are resolved before compilation, from top to bottom on a file-by-file basis.
++ Even if #define PRINT_TIMMY is defined inside a function, the preprocessor still not care/understand C++ concepts like functions. Therefore, this program behaves identically to one where #define PRINT_TIMMY was defined on the top on the file. To avoid confusion, you'll generally want to #define identifiers outside of functions.
++ Because an #include directive replaces the #include directive with the content of the included file, an #include can copy directives from the included file into the current file. These directives will the be processed in order.
++ One the preprocessor has finished, all defined identifiers from that file are discarded. This means that directives are only valid from the point of definition to the end of the file in which they are defined. Directives defined in one file do not have any impact on other files (unless they are #included into another file).
 */
