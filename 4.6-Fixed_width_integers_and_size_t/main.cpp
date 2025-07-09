@@ -48,10 +48,38 @@
 /*------------------------------------------*/
 // BEST PRACTICES FOR INTEGRAL TYPES
 // Given the various pros and cons of the fundamental integral types, the fixed-width integral types, the fast/least integral types, and signed/unsigned challenges, there is little consensus on integral best practices.
-// Our stance is that it's better to be correct than fast, and better to fail at compile time than runtime. Therefore, if you need an integral type with a guaranteed range, we recommend avoiding the fast/least types in favor of the fixed-width types. If you later discover the need to support an esoteric platform for which a specific fixed-width integral type won't compile, then you can decide how to migrate your program (and thoroughly retest) at that point. 
+// Our stance is that it's better to be correct than fast, and better to fail at compile time than runtime. Therefore, if you need an integral type with a guaranteed range, we recommend avoiding the fast/least types in favor of the fixed-width types. If you later discover the need to support an esoteric platform for which a specific fixed-width integral type won't compile, then you can decide how to migrate your program (and thoroughly retest) at that point.
 // Best practice:
 /*
     + Prefer int when the size of the integer doesn't matter (e.g. the number will always fit within the range of a 2-byte signed integer). For example, if you're asking the user to enter their age, or counting from 1 to 10, it doesn't matter whether int is 16-bits or 32-bits (the numbers will fit either way). This will cover the vast majority of the cases you're likely to run across.
-    + 
-
+    + Prefer std::int#_t when storing a quantity that needs a guaranteed range.
+    + Prefer std::uint#_t when doing bit manipulation or well-defined wrap-around behavior is required (e.g. for cryptography or random number generation).
+Avoid the following when possible:
+    + short and long integers (prefer a fixed-width integer type instead).
+    + The fast and least integral types (prefer a fixed-width integer type instead).
+    + Unsigned types for holding quantities (prefer a signed integer type instead).
+    + The 8-bit fixed-width integer types (prefer a 16-bit fixed-width integer type instead).
+    + Any compiler-specific fixed-width integers (for example, Visual Studio defines __int8, __int16, etc).
 */
+/*------------------------------------------*/
+// WHAT IS std::size_t?
+// std::size_t is an alias for an implementation-defined unsigned integral type. It is used within the standard library to represent the byte-size or length of objects.
+// std::size_t is actually a typedef.
+// std::size_t is defined in a number of different headers. If you need to use std::size_t, <cstddef> is the best header to include, as it contains the least number of other defined identifiers.
+// Best practice: 
+/*
+    + If you use std::size_t explicitly in your code, #include one of the headers that defines std::size_t (we recommend <cstddef>).
+    + Using sizeof  does not require a header (even though it returns a value whose type is std::size_t).
+*/
+// Much like an integer can vary in size depending on the system, std::size_t also varies in size. std::size_t is guaranteed to be unsigned and at least 16 bits, but on most systems will be equivalent to the address-width of the application. That is, 32-bit applications, std::size_t will typically be a 32-bit unsigned integer, and for a 64-bit application, std::size_t will typically be a 64-bit unsigned integer.
+/*------------------------------------------*/
+// THE sizeof OPERATOR RETURNS A VALUE OF TYPE std::size_t
+/*------------------------------------------*/
+// std::size_t imposes an upper limit on the size of an object
+// The sizeof operator must be able to return the byte-size of an object as a value of type std::size_t. Therefore, the byte-size of an object can be no larger than the largest value std::size_t can hold.
+// The C++20 standard says: "Constructing a type such that the number of bytes in its object representation exceeds the maximum value representable in the type std::size_t is ill-formed."
+// If it were possible to create a larger object, sizeof would not be able to return its byte-size, as it would be outside the range that a std::size_t could hold. Thus, creating an object with a size (in bytes) larger than the largest value an object of type std::size_t can hold is invalid (and will cause a compile error).
+// The size of std::size_t imposes a strict mathematical upper limit on an object's size. In practice, the largest creatable object may be smaller than this amount. (perhaps significantly so)
+// Some compilers limit the largest creatable object to half the maximum value of std::size_t.
+// Other factors may also play a role, such as how much contiguous memory your computer has available for allocation.
+// When 8-bit and 16-bit applications were the norm, this limit imposed a significant constraint on the size of objects. In the 32-bit and 64-bit era, this is rarely an issue, and therefore not something you generally need to worry about.
