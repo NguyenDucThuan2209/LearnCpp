@@ -14,4 +14,9 @@
 // BOOLEAN RETURN VALUES AND IF STATEMENTS
 /*------------------------------------------*/
 // NON-BOOLEAN CONDITIONALS
-// 
+// What happens if your conditional is an expression that does not evaluate to a Boolean value? In such case, the result of the conditional expression is converted to a Boolean value: non-zero values get converted to Boolean true, and zero-values get converted to Boolean false.
+// if (x) means "if x is non-zero/non-empty"
+/*------------------------------------------*/
+// if-STATEMENTS AND EARLY RETURNS
+// A return-statement ithat is not the last statement in a function is called an early return. Such a statement will cause the function to return to the caller when the return statement is executed (before the function would otherwise return to the caller, hence, "early").
+// Historically, early returns were frowned upon. However, in modern programming they are more accepted, particularly when they can be used to make a function simpler, or are used to abort a function early due to some error condition.
